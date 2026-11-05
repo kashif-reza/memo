@@ -59,17 +59,20 @@ test('randomizeEmojiConfig produces deterministic config when seeded', () => {
   assert.equal(c1.shortcode, c2.shortcode);
 });
 
-test('GIVEN_PHOTO_EMOJIS contains all 62 solo reaction emojis (14 new + 32 separated sheet crops + 16 originals)', () => {
-  assert.equal(GIVEN_PHOTO_EMOJIS.length, 62);
-  assert.equal(MULTI_REACTION_SHEETS.length, 4);
+test('GIVEN_PHOTO_EMOJIS contains the full expanded library of 139 reaction & meme emojis with unique IDs', () => {
+  assert.equal(GIVEN_PHOTO_EMOJIS.length, 139);
+  assert.equal(MULTI_REACTION_SHEETS.length, 5);
   const splitSheetItems = GIVEN_PHOTO_EMOJIS.filter((i) => i.category === 'split-sheet');
   const newSoloItems = GIVEN_PHOTO_EMOJIS.filter((i) => i.category === 'new-solo');
   const originalItems = GIVEN_PHOTO_EMOJIS.filter((i) => i.category === 'original');
-  assert.equal(splitSheetItems.length, 32);
-  assert.equal(newSoloItems.length, 14);
+  assert.equal(splitSheetItems.length, 69);
+  assert.equal(newSoloItems.length, 54);
   assert.equal(originalItems.length, 16);
 
+  const ids = new Set<string>();
   for (const item of GIVEN_PHOTO_EMOJIS) {
+    assert.ok(!ids.has(item.id), `Duplicate ID: ${item.id}`);
+    ids.add(item.id);
     assert.ok(item.photoUrl.startsWith('/assets/aistudio/'), `Invalid path: ${item.photoUrl}`);
     assert.ok(!item.photoUrl.includes('/crops/'), `Must not depend on untracked /crops/ dir: ${item.photoUrl}`);
     assert.equal(item.matchingConfig.photoUrl, item.photoUrl);

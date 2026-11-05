@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="memoGrad" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F2C1C3" />
+      <stop offset="35%" stop-color="#F38B77" />
+      <stop offset="70%" stop-color="#FEA75E" />
+      <stop offset="100%" stop-color="#FF9012" />
+    </linearGradient>
+    <linearGradient id="potGrad" x1="16" y1="24" x2="48" y2="54" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FEA75E" />
+      <stop offset="50%" stop-color="#F38B77" />
+      <stop offset="100%" stop-color="#FF9012" />
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="18" fill="#FFF7F6" stroke="url(#memoGrad)" stroke-width="4" />
+  <!-- Chef Toque / Flame Memo Crown -->
+  <path d="M20 24C16 21 17 14 23 15C26 10 38 10 41 15C47 14 48 21 44 24H20Z" fill="#F2C1C3" stroke="#9E2B35" stroke-width="2" stroke-linejoin="round" />
+  <!-- Smiling Cooking Pot / Memo Face -->
+  <path d="M16 28H48V38C48 46.8366 40.8366 54 32 54C23.1634 54 16 46.8366 16 38V28Z" fill="url(#potGrad)" />
+  <circle cx="25.5" cy="37.5" r="3" fill="#3A181C" />
+  <circle cx="38.5" cy="37.5" r="3" fill="#3A181C" />
+  <path d="M25 44.5C27 47.5 37 47.5 39 44.5" stroke="#3A181C" stroke-width="3" stroke-linecap="round" />
+</svg>
