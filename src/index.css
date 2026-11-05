@@ -1,0 +1,100 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: 'Bricolage Grotesque', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+  }
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+  }
+}
+
+.checkerboard-dark {
+  background-color: #0f172a;
+  background-image: 
+    linear-gradient(45deg, #1e293b 25%, transparent 25%), 
+    linear-gradient(-45deg, #1e293b 25%, transparent 25%), 
+    linear-gradient(45deg, transparent 75%, #1e293b 75%), 
+    linear-gradient(-45deg, transparent 75%, #1e293b 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+.checkerboard-light {
+  background-color: #fffdf7;
+  background-image: 
+    linear-gradient(45deg, #fef3c7 25%, transparent 25%), 
+    linear-gradient(-45deg, #fef3c7 25%, transparent 25%), 
+    linear-gradient(45deg, transparent 75%, #fef3c7 75%), 
+    linear-gradient(-45deg, transparent 75%, #fef3c7 75%);
+  background-size: 22px 22px;
+  background-position: 0 0, 0 11px, 11px -11px, -11px 0px;
+}
+
+.backdrop-sunny-pop {
+  background: radial-gradient(circle at 50% 38%, #ffffff 0%, #fef9c3 48%, #fde68a 100%);
+  background-image:
+    radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.92) 0%, rgba(254, 243, 199, 0.78) 52%, rgba(253, 224, 71, 0.45) 100%),
+    radial-gradient(#f59e0b 0.85px, transparent 0.85px);
+  background-size: 100% 100%, 20px 20px;
+}
+
+.backdrop-peach-fizz {
+  background: radial-gradient(circle at 50% 38%, #ffffff 0%, #ffe4e6 52%, #fecdd3 100%);
+}
+
+.backdrop-mint-breeze {
+  background: radial-gradient(circle at 50% 38%, #ffffff 0%, #d1fae5 52%, #99f6e4 100%);
+}
+
+.backdrop-sky-bliss {
+  background: radial-gradient(circle at 50% 38%, #ffffff 0%, #e0f2fe 52%, #ddd6fe 100%);
+}
+
+.delightful-studio-bg {
+  background: linear-gradient(135deg, #d2c7e0 0%, #c6bad7 50%, #bfb2d2 100%);
+}
+
+.flowbase-outer-bg {
+  background: radial-gradient(circle at 20% 20%, #d8cee6 0%, #c8bcd8 52%, #bdb0ce 100%);
+}
+
+.flowbase-shell {
+  background-color: #312c38;
+  box-shadow:
+    0 32px 70px -12px rgba(25, 19, 34, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.07) inset;
+}
+
+.flowbase-hero-stage {
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 3.5%),
+    radial-gradient(circle at 78% 12%, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0) 2.5%),
+    radial-gradient(circle at 64% 28%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 4%),
+    radial-gradient(circle at 86% 36%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 3%),
+    radial-gradient(circle at 18% 44%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 2.8%),
+    linear-gradient(180deg, #d7d4ea 0%, #e4dff0 48%, #f3dec3 58%, #e5be93 82%, #d4a679 100%);
+}
+
+.flowbase-card-1 {
+  background: linear-gradient(180deg, #cdc8e6 0%, #dcd8f0 55%, #ebd5bc 75%, #dfb992 100%);
+}
+
+.flowbase-card-2 {
+  background: linear-gradient(180deg, #cbcad2 0%, #dedee4 62%, #d4d4dc 100%);
+}
+
+.flowbase-card-3 {
+  background: linear-gradient(180deg, #b6dcd4 0%, #cceae3 62%, #bfe0d8 100%);
+}
+
+.flowbase-card-4 {
+  background: linear-gradient(180deg, #e7dec8 0%, #f2ebd9 62%, #e6dcc4 100%);
+}

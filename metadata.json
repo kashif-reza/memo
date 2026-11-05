@@ -1,0 +1,6 @@
+{
+  "name": "MojiMotion Studio",
+  "description": "Custom animated emoji creator and motion rig studio with real-time physics presets, layered vector parts, timeline scrubbing, and multi-format export.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
