@@ -2,6 +2,9 @@ node_modules/
 build/
 dist/
 coverage/
+.vercel/
+.playwright-cli/
+bun.lock
 .DS_Store
 *.log
 .env*

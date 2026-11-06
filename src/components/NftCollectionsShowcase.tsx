@@ -182,23 +182,7 @@ export const NftCollectionsShowcase: React.FC<NftCollectionsShowcaseProps> = ({
 
   return (
     <div className="w-full min-h-screen bg-[#F9F9F9] text-slate-900 select-none">
-      {/* TOP RIBBON TICKER IN CORAL RED & GOLDEN YELLOW */}
-      <div className="relative w-full overflow-hidden py-2.5 mb-6 bg-[#FF4925] text-white shadow-xs">
-        <div className="flex items-center justify-around gap-6 text-[11px] font-display font-bold tracking-[0.18em] uppercase whitespace-nowrap">
-          {['EMOJI ART', 'MOJI STUDIO', 'CUSTOM RIGS', 'EMOJI ART', 'REACTION MIXER', 'EMOJI ART', 'INSTANT CREATE'].map(
-            (label, idx) => (
-              <span key={idx} className="inline-flex items-center gap-3">
-                <span>{label}</span>
-                <span aria-hidden="true" className="text-[#FFBA00] text-sm">
-                  ✦
-                </span>
-              </span>
-            )
-          )}
-        </div>
-      </div>
-
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 pb-16 space-y-14">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 pt-6 pb-16 space-y-14">
         {/* SECTION 1: EMOJI COLLECTIONS HEADER + FILTER TABS */}
         <section aria-label="Emoji Collections Carousel" className="relative pt-1">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-6">

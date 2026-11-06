@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { EmojiConfig, GivenPhotoItem, MoodVibeId, SavedEmoji } from './types/emoji';
 import {
   STARTER_PRESETS,
@@ -12,6 +12,7 @@ import {
 } from './utils/emojiEngine';
 import {
   GIVEN_PHOTO_EMOJIS,
+  createDroppedPhotoEmoji,
   mixEmojiConfigs,
   randomizePhotoCombo,
 } from './utils/photoEmojiCatalog';
@@ -26,7 +27,8 @@ import {
   Download,
 } from 'lucide-react';
 
-const STORAGE_KEY = 'mojimotion_saved_pack_v3';
+const STORAGE_KEY = 'mojimotion_saved_pack_v4';
+const CUSTOM_PHOTOS_STORAGE_KEY = 'mojimotion_custom_photos_v1';
 
 export type WorkspaceTab = 'collections' | 'easy-studio';
 
@@ -34,11 +36,35 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<WorkspaceTab>('collections');
   const [selectedMood, setSelectedMood] = useState<MoodVibeId>('all');
 
-  const allPhotoEmojis = GIVEN_PHOTO_EMOJIS;
+  const [customPhotos, setCustomPhotos] = useState<GivenPhotoItem[]>(() => {
+    try {
+      const raw = localStorage.getItem(CUSTOM_PHOTOS_STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {
+      // ignore storage errors
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(CUSTOM_PHOTOS_STORAGE_KEY, JSON.stringify(customPhotos));
+    } catch {
+      // ignore storage quota errors
+    }
+  }, [customPhotos]);
+
+  const allPhotoEmojis = useMemo(
+    () => [...customPhotos, ...GIVEN_PHOTO_EMOJIS],
+    [customPhotos]
+  );
 
   // History-tracked emoji configuration
   const [history, setHistory] = useState(() =>
-    createHistoryStack<EmojiConfig>(GIVEN_PHOTO_EMOJIS[14].matchingConfig)
+    createHistoryStack<EmojiConfig>(GIVEN_PHOTO_EMOJIS[0].matchingConfig)
   );
   const config = history.present;
 
@@ -137,6 +163,30 @@ export default function App() {
     setHistory((prev) => pushHistoryState(prev, mixed));
   };
 
+  const handleAddUserPhotos = (files: FileList | File[]) => {
+    const list = Array.from(files).filter((f) => f.type.startsWith('image/'));
+    if (list.length === 0) return;
+
+    list.forEach((file, idx) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          const item = createDroppedPhotoEmoji(
+            reader.result,
+            file.name,
+            selectedMood === 'all' ? 'rizz' : selectedMood,
+            idx + 1
+          );
+          setCustomPhotos((prev) => [item, ...prev]);
+          if (idx === 0) {
+            setHistory((prev) => pushHistoryState(prev, item.matchingConfig));
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleShortcodeInput = (val: string) => {
     setShortcodeDraft(val);
     const check = validateShortcode(val);
@@ -201,7 +251,7 @@ export default function App() {
   return (
     <div className="min-h-screen w-full bg-[#F9F9F9] text-slate-900 flex flex-col">
       {/* MINIMALIST 3-ZONE TOP NAVIGATION BAR */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-8 py-3.5 shadow-2xs">
+      <header className="sticky top-0 z-50 bg-[#E8B1C4] border-b border-[#d899b0] px-4 sm:px-8 py-3.5 shadow-2xs">
         <div className="max-w-[1360px] mx-auto flex items-center justify-between gap-4 sm:gap-8">
           {/* Zone 1: Custom Logo + "Your Memo" Brand Wordmark */}
           <a
@@ -214,12 +264,12 @@ export default function App() {
             className="flex items-center gap-2.5 font-display text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 whitespace-nowrap shrink-0 group"
           >
             <img
-              src="/favicon.svg"
+              src="/assets/aistudio/WhatsApp_Image_2026-11-06_at_4.41.22_PM_bdbc8d81.jpeg"
               alt="The Memo Logo"
-              className="w-8 h-8 rounded-lg shadow-xs group-hover:scale-105 transition-transform"
+              className="w-9 h-9 rounded-full object-cover bg-white shadow-xs group-hover:scale-105 transition-transform"
             />
             <span>
-              <span className="text-[#FF4925]">Your</span>{' '}
+              <span className="text-[#FF004C]">Your</span>{' '}
               <span className="text-slate-900">Memo</span>
             </span>
           </a>
@@ -227,15 +277,15 @@ export default function App() {
           {/* Zone 2: Minimalist Navbar View Buttons */}
           <nav
             aria-label="Primary Workspace Views"
-            className="flex items-center gap-1 sm:gap-2 p-1 rounded-xl bg-[#F9F9F9] border border-slate-200 overflow-x-auto"
+            className="flex items-center gap-1 sm:gap-2 p-1 rounded-xl bg-white/80 border border-white/60 overflow-x-auto shadow-2xs"
           >
             <button
               type="button"
               onClick={() => setActiveTab('collections')}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                 activeTab === 'collections'
-                  ? 'bg-[#FF4925] text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white'
+                  ? 'bg-[#FF004C] text-white shadow-xs'
+                  : 'text-slate-800 hover:text-slate-950 hover:bg-white'
               }`}
             >
               Collections
@@ -246,8 +296,8 @@ export default function App() {
               onClick={() => setActiveTab('easy-studio')}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                 activeTab === 'easy-studio'
-                  ? 'bg-[#FF4925] text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white'
+                  ? 'bg-[#FF004C] text-white shadow-xs'
+                  : 'text-slate-800 hover:text-slate-950 hover:bg-white'
               }`}
             >
               Easy Studio
@@ -256,7 +306,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => setIsChatSimOpen(true)}
-              className="hidden md:inline-flex px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white transition-colors cursor-pointer whitespace-nowrap shrink-0"
+              className="hidden md:inline-flex px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-800 hover:text-slate-950 hover:bg-white transition-colors cursor-pointer whitespace-nowrap shrink-0"
             >
               Chat Sandbox
             </button>
@@ -270,7 +320,7 @@ export default function App() {
                 onClick={handleUndo}
                 disabled={history.past.length === 0}
                 aria-label="Undo Change"
-                className="p-2 rounded-lg bg-[#F9F9F9] border border-slate-200 text-slate-700 hover:bg-[#FFBA00]/20 disabled:opacity-35 transition-colors cursor-pointer"
+                className="p-2 rounded-lg bg-white/85 border border-white/60 text-slate-800 hover:bg-white disabled:opacity-35 transition-colors cursor-pointer"
               >
                 <Undo2 className="w-3.5 h-3.5" />
               </button>
@@ -279,7 +329,7 @@ export default function App() {
                 onClick={handleRedo}
                 disabled={history.future.length === 0}
                 aria-label="Redo Change"
-                className="p-2 rounded-lg bg-[#F9F9F9] border border-slate-200 text-slate-700 hover:bg-[#FFBA00]/20 disabled:opacity-35 transition-colors cursor-pointer"
+                className="p-2 rounded-lg bg-white/85 border border-white/60 text-slate-800 hover:bg-white disabled:opacity-35 transition-colors cursor-pointer"
               >
                 <Redo2 className="w-3.5 h-3.5" />
               </button>
@@ -349,6 +399,7 @@ export default function App() {
             onCopyShortcode={handleCopyShortcode}
             onOpenExport={() => setIsExportOpen(true)}
             onOpenChatSim={() => setIsChatSimOpen(true)}
+            onAddPhotos={handleAddUserPhotos}
           />
         )}
       </main>

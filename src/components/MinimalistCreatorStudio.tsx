@@ -34,6 +34,7 @@ import {
   Copy,
   Trash2,
   Palette,
+  ImagePlus,
 } from 'lucide-react';
 
 interface MinimalistCreatorStudioProps {
@@ -57,6 +58,7 @@ interface MinimalistCreatorStudioProps {
   onCopyShortcode: (shortcode: string, id: string) => void;
   onOpenExport: () => void;
   onOpenChatSim: () => void;
+  onAddPhotos?: (files: FileList | File[]) => void;
 }
 
 type StudioStepTab = 'photo' | 'motion' | 'face' | 'saved';
@@ -94,6 +96,7 @@ export const MinimalistCreatorStudio: React.FC<MinimalistCreatorStudioProps> = (
   onCopyShortcode,
   onOpenExport,
   onOpenChatSim,
+  onAddPhotos,
 }) => {
   const [activeStep, setActiveStep] = useState<StudioStepTab>('photo');
   const [moodFilter, setMoodFilter] = useState<
@@ -107,7 +110,13 @@ export const MinimalistCreatorStudio: React.FC<MinimalistCreatorStudioProps> = (
   const filteredPhotos = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     return allPhotoEmojis.filter((item) => {
-      if (moodFilter === 'meme-pack' && item.category !== 'new-solo') return false;
+      if (
+        moodFilter === 'meme-pack' &&
+        item.category !== 'new-solo' &&
+        item.category !== 'user-drop'
+      ) {
+        return false;
+      }
       if (moodFilter === 'split-sheet' && item.category !== 'split-sheet') return false;
       if (
         moodFilter !== 'all' &&
@@ -440,14 +449,35 @@ export const MinimalistCreatorStudio: React.FC<MinimalistCreatorStudioProps> = (
                     ))}
                   </div>
 
-                  <input
-                    type="search"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search library..."
-                    aria-label="Search emoji library"
-                    className="w-full sm:w-44 px-3 py-1.5 rounded-lg bg-[#F9F9F9] border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#FF4925]"
-                  />
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    {onAddPhotos && (
+                      <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FF004C] hover:bg-[#FF4925] text-white text-xs font-bold transition-colors cursor-pointer whitespace-nowrap shrink-0 shadow-2xs">
+                        <ImagePlus className="w-3.5 h-3.5" />
+                        <span>+ Add Photos</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          className="hidden"
+                          onChange={(e) => {
+                            if (e.target.files && e.target.files.length > 0) {
+                              onAddPhotos(e.target.files);
+                              e.target.value = '';
+                            }
+                          }}
+                        />
+                      </label>
+                    )}
+
+                    <input
+                      type="search"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search library..."
+                      aria-label="Search emoji library"
+                      className="w-full sm:w-40 px-3 py-1.5 rounded-lg bg-[#F9F9F9] border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#FF4925]"
+                    />
+                  </div>
                 </div>
 
                 {/* Clean Visual Grid of Reaction Photos */}
